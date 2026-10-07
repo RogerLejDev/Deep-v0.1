@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- MOLO. Slow subterranean tunneller. Mass, shovel claws, almost no eyes.
+       Reads as "heavy and harmless". Faces +X. -->
+  <defs>
+    <linearGradient id="hide" x1="0.2" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#9A8468"/>
+      <stop offset="50%" stop-color="#6B5944"/>
+      <stop offset="100%" stop-color="#312619"/>
+    </linearGradient>
+    <linearGradient id="claw" x1="0" y1="0" x2="1" y2="0.6">
+      <stop offset="0%" stop-color="#E4D9C2"/>
+      <stop offset="100%" stop-color="#8B7A5C"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8A7558"/>
+      <stop offset="100%" stop-color="#4A3B28"/>
+    </linearGradient>
+  </defs>
+
+  <!-- tail -->
+  <path d="M8 40 q-7 -1 -7 4 q5 4 9 1 z" fill="#3C2F20"/>
+
+  <!-- rear foot -->
+  <path d="M18 48 q-4 6 1 9 l7 -1 q-4 -4 -2 -8 z" fill="#3A2D1E"/>
+
+  <!-- body mass -->
+  <path d="M10 38 q2 -17 20 -19 q18 -2 24 10 q4 7 -1 14 q-7 9 -24 8 q-17 -1 -19 -13 z" fill="url(#hide)"/>
+
+  <!-- segmented back plates -->
+  <path d="M17 24 q7 -5 14 -4 q-5 5 -14 7 z" fill="url(#plate)" opacity="0.85"/>
+  <path d="M30 20 q8 -1 13 4 q-7 3 -14 1 z" fill="url(#plate)" opacity="0.7"/>
+  <path d="M43 25 q7 2 9 8 q-7 1 -11 -4 z" fill="url(#plate)" opacity="0.55"/>
+  <!-- belly fold -->
+  <path d="M15 44 q16 7 32 -1" fill="none" stroke="#2A2116" stroke-width="2" opacity="0.5"/>
+
+  <!-- snout -->
+  <path d="M52 32 q10 0 11 6 q-2 6 -11 5 q-4 -5 0 -11 z" fill="#7D6A4E"/>
+  <ellipse cx="62" cy="37" rx="2.4" ry="3" fill="#2A2116"/>
+  <path d="M57 33 q3 1 4 3" fill="none" stroke="#B5A080" stroke-width="1" opacity="0.6"/>
+
+  <!-- tiny eye, almost vestigial -->
+  <ellipse cx="50" cy="29" rx="2.2" ry="1.8" fill="#1C1510"/>
+  <circle cx="50.6" cy="28.5" r="0.7" fill="#C9BFA4" opacity="0.8"/>
+
+  <!-- whiskers -->
+  <path d="M56 31 q6 -4 8 -8" fill="none" stroke="#C9BFA4" stroke-width="0.9" opacity="0.55"/>
+  <path d="M57 41 q6 3 8 7" fill="none" stroke="#C9BFA4" stroke-width="0.9" opacity="0.45"/>
+
+  <!-- shovel claw, front -->
+  <path d="M40 46 q-2 8 3 11 l9 -2 q-6 -4 -4 -9 z" fill="#3A2D1E"/>
+  <path d="M46 55 l12 -1 l-2 5 l-11 0 z" fill="url(#claw)"/>
+  <path d="M48 56 l0 7 M51 56 l1 7 M54 55.5 l1 6.5" stroke="#6B5B41" stroke-width="1" opacity="0.6"/>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 64">
+  <!-- LUMREAPER. Legendary. An apex bioluminescent predator that only exists
+       during an UNKNOWN SIGNAL event. Deliberately much larger than anything
+       else in the Rootlands, with a crown of light and scythe forelimbs. -->
+  <defs>
+    <linearGradient id="hull" x1="0.1" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#5B4C86"/>
+      <stop offset="40%" stop-color="#2A2244"/>
+      <stop offset="100%" stop-color="#0A0814"/>
+    </linearGradient>
+    <linearGradient id="scythe" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EADCFF"/>
+      <stop offset="55%" stop-color="#A481E8"/>
+      <stop offset="100%" stop-color="#3B2A63"/>
+    </linearGradient>
+    <radialGradient id="crown" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="30%" stop-color="#C9A8FF"/>
+      <stop offset="100%" stop-color="#6A3FC0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="aura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9F6BFF" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#9F6BFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B693FF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#4B2E86" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="48" cy="32" rx="48" ry="30" fill="url(#aura)"/>
+
+  <!-- dorsal sail -->
+  <path d="M26 24 q14 -22 36 -18 q-6 12 -10 16 q-10 -4 -26 2 z" fill="url(#fin)"/>
+  <!-- trailing tail streamers -->
+  <path d="M14 34 q-14 2 -13 12" fill="none" stroke="#6E55A8" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>
+  <path d="M15 40 q-12 6 -10 16" fill="none" stroke="#6E55A8" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- rear limbs -->
+  <path d="M30 42 l-7 18 l4 2 l8 -17 z" fill="#1A1430"/>
+  <path d="M42 44 l-2 18 l4 1 l3 -18 z" fill="#1A1430"/>
+
+  <!-- body -->
+  <path d="M12 34 q6 -14 26 -14 l26 2 q12 3 14 12 q-2 10 -14 13 l-26 2 q-20 -1 -26 -15 z" fill="url(#hull)"/>
+  <!-- plating -->
+  <path d="M22 26 q12 -5 24 -3" fill="none" stroke="#8E74CC" stroke-width="1.4" opacity="0.45"/>
+  <path d="M20 40 q14 6 30 3" fill="none" stroke="#8E74CC" stroke-width="1.2" opacity="0.3"/>
+  <!-- luminous flank organs -->
+  <circle cx="30" cy="34" r="3.4" fill="#C9A8FF" opacity="0.85"/>
+  <circle cx="40" cy="36" r="2.6" fill="#C9A8FF" opacity="0.7"/>
+  <circle cx="50" cy="33" r="3.0" fill="#C9A8FF" opacity="0.8"/>
+
+  <!-- head -->
+  <path d="M64 24 l18 4 l10 8 l-10 8 l-18 3 q-6 -11 0 -23 z" fill="url(#hull)"/>
+  <!-- crown of light -->
+  <circle cx="78" cy="32" r="14" fill="url(#crown)"/>
+  <path d="M72 20 l3 -14 l5 13 z" fill="url(#scythe)" opacity="0.9"/>
+  <path d="M82 20 l9 -11 l-1 13 z" fill="url(#scythe)" opacity="0.8"/>
+  <!-- eye band -->
+  <path d="M76 28 l14 2 l-1 5 l-14 -1 z" fill="#07050F"/>
+  <circle cx="80" cy="31" r="1.8" fill="#FFE9B5"/>
+  <circle cx="86" cy="32" r="1.4" fill="#FFE9B5"/>
+
+  <!-- scythe forelimbs -->
+  <path d="M58 38 q10 8 8 22 l-5 -1 q1 -12 -8 -18 z" fill="#1A1430"/>
+  <path d="M60 58 q16 -2 22 -14 q-2 12 -14 19 q-6 1 -8 -5 z" fill="url(#scythe)"/>
+  <path d="M56 20 q12 -8 24 -4 q-10 1 -16 7 z" fill="url(#scythe)" opacity="0.55"/>
+</svg>

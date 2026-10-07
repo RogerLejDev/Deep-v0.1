@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40">
+  <!-- Player torso + hooded head + field pack. Drawn facing +X; the sprite is
+       flipped for the other direction. Legs and arm are separate sprites so
+       they can be animated procedurally. -->
+  <defs>
+    <linearGradient id="coat" x1="0.2" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#4E6474"/>
+      <stop offset="45%" stop-color="#2E3C49"/>
+      <stop offset="100%" stop-color="#151C24"/>
+    </linearGradient>
+    <linearGradient id="hood" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#5D7484"/>
+      <stop offset="100%" stop-color="#232D37"/>
+    </linearGradient>
+    <linearGradient id="pack" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0%" stop-color="#7A5C3C"/>
+      <stop offset="100%" stop-color="#36281A"/>
+    </linearGradient>
+    <radialGradient id="visor" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#BFF0FF"/>
+      <stop offset="60%" stop-color="#4FA8C8"/>
+      <stop offset="100%" stop-color="#15323F"/>
+    </radialGradient>
+  </defs>
+
+  <!-- pack, behind the body -->
+  <path d="M5 14 q-4 1 -4 7 l1 8 q0 3 4 3 l5 -1 l-1 -17 z" fill="url(#pack)"/>
+  <path d="M2 20 q5 -2 8 0" fill="none" stroke="#241A10" stroke-width="1.2" opacity="0.7"/>
+  <path d="M2 26 q5 -2 8 0" fill="none" stroke="#241A10" stroke-width="1" opacity="0.5"/>
+  <!-- rolled bedding on top of the pack -->
+  <ellipse cx="6" cy="14" rx="5.5" ry="2.4" fill="#8A6A45"/>
+
+  <!-- coat / torso -->
+  <path d="M9 13 q9 -2 13 3 q3 5 2 13 l-2 6 l-13 1 q-3 -12 0 -23 z" fill="url(#coat)"/>
+  <!-- coat hem highlight -->
+  <path d="M9 30 q8 3 14 1" fill="none" stroke="#6E8696" stroke-width="1.1" opacity="0.45"/>
+  <!-- chest strap -->
+  <path d="M11 17 q7 2 10 7" fill="none" stroke="#8A6A45" stroke-width="2.2"/>
+
+  <!-- hood + head -->
+  <path d="M11 3 q11 -3 15 6 q1 6 -4 8 l-9 1 q-5 -7 -2 -15 z" fill="url(#hood)"/>
+  <!-- hood opening -->
+  <path d="M17 7 q8 0 8 5 q0 4 -6 5 q-5 0 -6 -5 q0 -5 4 -5 z" fill="#0C1218"/>
+  <!-- visor glow (this is the character's "face") -->
+  <ellipse cx="21" cy="12" rx="4.2" ry="2.6" fill="url(#visor)"/>
+  <ellipse cx="22.4" cy="11.4" rx="1.4" ry="0.9" fill="#E8FBFF" opacity="0.9"/>
+  <!-- hood rim -->
+  <path d="M12 4 q11 -2 14 5" fill="none" stroke="#7E95A5" stroke-width="1.2" opacity="0.55"/>
+</svg>

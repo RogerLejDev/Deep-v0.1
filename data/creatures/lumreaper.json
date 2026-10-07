@@ -1,0 +1,45 @@
+{
+  "id": "lumreaper",
+  "codex_number": 6,
+  "display_name": "Lumreaper",
+  "art": "res://assets/svg/creatures/lumreaper.svg",
+  "size_px": 58,
+  "rarity": "legendary",
+  "behaviour": "apex",
+  "stats": { "hp": 420, "speed": 74, "damage": 26, "jump": 0 },
+  "senses": { "flee_range": 0, "aggro_range": 420, "wander_range": 520 },
+  "spawn": {
+    "depth_min": 120, "depth_max": 320, "weight": 0,
+    "biomes": ["rootlands"], "needs_floor": false, "floats": true,
+    "group_min": 1, "group_max": 1,
+    "requires_darkness": true,
+    "legendary_event": "unknown_signal"
+  },
+  "light": { "colour": [0.72, 0.45, 1.0], "radius": 260, "intensity": 0.9 },
+  "loot": [
+    { "item": "deep_crystal_shard", "chance": 1.0, "min": 4, "max": 7 },
+    { "item": "ancient_fragment", "chance": 1.0, "min": 2, "max": 4 },
+    { "item": "crystal_shard", "chance": 1.0, "min": 6, "max": 10 }
+  ],
+  "codex": {
+    "habitat": "None. It is not resident anywhere. It arrives.",
+    "behaviour": "Hunts. Phases between a hunting pass and a stationary light-flare that it uses to flush prey into the open.",
+    "diet": "Everything else on this list.",
+    "resource": "Abyssal crystal in quantity, and more worked stone than it should be carrying.",
+    "weakness": "The crown dims between passes. That is the only time it can be hurt.",
+    "lore": "It does not belong to the Rootlands' food chain; nothing here is large enough to sustain it. It comes up from somewhere further down, and it goes back."
+  },
+  "variants": [
+    {
+      "id": "normal", "display_name": "Lumreaper", "weight": 100,
+      "hue_shift": 0, "saturation": 1.0, "value": 1.0, "legendary": true
+    },
+    {
+      "id": "pale", "display_name": "Pale Lumreaper", "weight": 4,
+      "hue_shift": 40, "saturation": 0.3, "value": 1.35,
+      "scale_mul": 1.1, "hp_mul": 1.4, "emission_mul": 1.5,
+      "legendary": true, "rare": true,
+      "note": "Recorded once. The light it gives off is almost white."
+    }
+  ]
+}

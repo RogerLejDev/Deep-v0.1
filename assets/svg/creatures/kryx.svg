@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- KRYX. Crystalline insectoid, territorial around crystal seams.
+       Angular everything, so it silhouettes clearly against round cave rock.
+       Faces +X. -->
+  <defs>
+    <linearGradient id="carapace" x1="0.1" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#6FD2E8"/>
+      <stop offset="45%" stop-color="#2E7E9E"/>
+      <stop offset="100%" stop-color="#10303F"/>
+    </linearGradient>
+    <linearGradient id="shard" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#D6FBFF"/>
+      <stop offset="60%" stop-color="#5FC6E6"/>
+      <stop offset="100%" stop-color="#1B5C7C"/>
+    </linearGradient>
+    <radialGradient id="kcore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#8CEBFF"/>
+      <stop offset="100%" stop-color="#1D7FA8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="leg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3D8FAC"/>
+      <stop offset="100%" stop-color="#0E2733"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rear legs -->
+  <path d="M20 38 l-11 7 l2 3 l11 -6 z" fill="url(#leg)"/>
+  <path d="M24 40 l-8 11 l3 2 l8 -10 z" fill="url(#leg)"/>
+  <path d="M30 41 l-2 13 l3 1 l3 -13 z" fill="url(#leg)"/>
+  <!-- front legs -->
+  <path d="M38 40 l4 12 l3 -1 l-3 -12 z" fill="url(#leg)"/>
+  <path d="M43 37 l10 8 l-2 3 l-10 -7 z" fill="url(#leg)"/>
+
+  <!-- back shards -->
+  <path d="M20 26 l-3 -17 l9 12 z" fill="url(#shard)" opacity="0.95"/>
+  <path d="M29 23 l1 -20 l7 17 z" fill="url(#shard)"/>
+  <path d="M38 25 l8 -13 l-1 15 z" fill="url(#shard)" opacity="0.9"/>
+
+  <!-- abdomen -->
+  <path d="M13 34 l9 -8 l12 2 l-2 14 l-13 2 z" fill="url(#carapace)"/>
+  <!-- thorax -->
+  <path d="M29 24 l14 2 l6 9 l-5 9 l-14 -1 l-3 -10 z" fill="url(#carapace)"/>
+  <!-- plating highlights -->
+  <path d="M31 26 l12 2 l4 7" fill="none" stroke="#9FE9FF" stroke-width="1.3" opacity="0.5"/>
+  <path d="M15 33 l8 -6 l10 2" fill="none" stroke="#9FE9FF" stroke-width="1" opacity="0.35"/>
+
+  <!-- head -->
+  <path d="M43 27 l11 3 l3 6 l-4 6 l-11 -1 l-2 -7 z" fill="url(#carapace)"/>
+  <!-- glowing core -->
+  <circle cx="49" cy="34" r="8" fill="url(#kcore)"/>
+  <path d="M46 31 l5 -2 l3 4 l-3 4 l-5 -1 z" fill="#E8FDFF"/>
+  <!-- eye cluster -->
+  <path d="M53 29 l4 1 l-1 3 l-4 -1 z" fill="#06202C"/>
+  <path d="M53 37 l4 -1 l-1 3 l-4 0 z" fill="#06202C"/>
+  <!-- mandibles -->
+  <path d="M57 31 l7 2 l-6 2 z" fill="#CFF6FF"/>
+  <path d="M57 38 l7 -1 l-6 3 z" fill="#CFF6FF"/>
+  <!-- antennae -->
+  <path d="M52 26 q5 -8 12 -8" fill="none" stroke="#5FC6E6" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

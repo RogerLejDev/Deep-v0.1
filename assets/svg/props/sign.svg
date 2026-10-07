@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 32">
+  <!-- Ancient inscription slab: carries one line of the mystery. -->
+  <defs>
+    <linearGradient id="slab" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#4A5E5C"/><stop offset="100%" stop-color="#16201F"/>
+    </linearGradient>
+  </defs>
+  <path d="M4 2 l20 0 l2 22 l-11 6 l-13 -6 z" fill="url(#slab)"/>
+  <path d="M6 5 l16 0 l1 17 l-9 4 l-9 -4 z" fill="none" stroke="#5FD8C4" stroke-width="1" opacity="0.5"/>
+  <!-- glyph rows -->
+  <path d="M9 9 l10 0 M9 13 l7 0 M9 17 l11 0" stroke="#5FD8C4" stroke-width="1.4" opacity="0.8"/>
+  <circle cx="21" cy="13" r="1.4" fill="#5FD8C4" opacity="0.9"/>
+</svg>

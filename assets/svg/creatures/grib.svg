@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- GRIB. Surface forager. Round, mossy, over-eyed, built to look harmless
+       and to read instantly at 18 world pixels tall. Faces +X. -->
+  <defs>
+    <radialGradient id="body" cx="38%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#8FBE62"/>
+      <stop offset="55%" stop-color="#5E8C3E"/>
+      <stop offset="100%" stop-color="#2F4A22"/>
+    </radialGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9BCB6C"/>
+      <stop offset="100%" stop-color="#3C5C27"/>
+    </linearGradient>
+    <radialGradient id="eyeg" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#FFFDF2"/>
+      <stop offset="70%" stop-color="#D8E6C4"/>
+      <stop offset="100%" stop-color="#7C9165"/>
+    </radialGradient>
+  </defs>
+
+  <!-- hind leg -->
+  <path d="M22 47 q-3 6 1 9 l5 -1 q-3 -3 -1 -8 z" fill="#2A3F1E"/>
+  <!-- tail tuft -->
+  <path d="M15 36 q-9 -2 -12 6 q7 1 9 -1 q1 4 4 3 z" fill="url(#ear)" opacity="0.95"/>
+
+  <!-- leaf ears -->
+  <path d="M36 16 q4 -15 17 -14 q-1 13 -12 18 z" fill="url(#ear)"/>
+  <path d="M36 16 q4 -11 14 -11" fill="none" stroke="#28401A" stroke-width="1.2" opacity="0.6"/>
+  <path d="M27 17 q-3 -12 -14 -12 q2 11 11 15 z" fill="url(#ear)" opacity="0.85"/>
+
+  <!-- body -->
+  <ellipse cx="32" cy="35" rx="21" ry="18" fill="url(#body)"/>
+  <!-- moss clumps on the back -->
+  <path d="M18 24 q5 -5 11 -3 q-4 4 -11 5 z" fill="#A3D176" opacity="0.75"/>
+  <path d="M38 22 q5 -3 9 1 q-5 2 -9 1 z" fill="#A3D176" opacity="0.55"/>
+  <!-- belly -->
+  <ellipse cx="33" cy="43" rx="14" ry="8" fill="#B9D99A" opacity="0.28"/>
+
+  <!-- big eye -->
+  <ellipse cx="41" cy="31" rx="9" ry="9.5" fill="url(#eyeg)"/>
+  <ellipse cx="42.5" cy="32" rx="4.6" ry="5.2" fill="#13200F"/>
+  <ellipse cx="44" cy="29.5" rx="1.7" ry="1.9" fill="#FFFFFF" opacity="0.92"/>
+  <!-- brow -->
+  <path d="M33 23 q8 -3 15 2" fill="none" stroke="#223617" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- snout -->
+  <path d="M50 36 q6 1 6 4 q-4 3 -8 1 z" fill="#4A6B33"/>
+  <circle cx="54" cy="38.5" r="1.1" fill="#1A2810"/>
+
+  <!-- front leg -->
+  <path d="M38 48 q-2 7 2 9 l5 -1 q-3 -4 -1 -8 z" fill="#365124"/>
+  <!-- feet -->
+  <ellipse cx="29" cy="56" rx="5" ry="2.2" fill="#223617"/>
+  <ellipse cx="44" cy="56" rx="5" ry="2.2" fill="#223617"/>
+</svg>

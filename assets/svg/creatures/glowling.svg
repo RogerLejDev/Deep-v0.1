@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- GLOWLING. Drifting cave bioluminescent. The bell and core are the read;
+       the tendrils are animated by code (vertical squash + rotation). -->
+  <defs>
+    <radialGradient id="bell" cx="50%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#EAFBFF" stop-opacity="0.98"/>
+      <stop offset="42%" stop-color="#6FD8F2" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#1E5F86" stop-opacity="0.72"/>
+    </radialGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="45%" stop-color="#9FF0FF"/>
+      <stop offset="100%" stop-color="#2BA8D4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tend" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7FE4FA" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#2E7FA8" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#8FE6FF" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#8FE6FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- outer halo so the creature reads even in near-black caves -->
+  <circle cx="32" cy="26" r="30" fill="url(#halo)"/>
+
+  <!-- tendrils -->
+  <path d="M22 32 q-3 14 1 26" fill="none" stroke="url(#tend)" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M28 34 q-1 16 2 27" fill="none" stroke="url(#tend)" stroke-width="2.1" stroke-linecap="round"/>
+  <path d="M36 34 q2 15 -1 26" fill="none" stroke="url(#tend)" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M42 32 q4 13 0 25" fill="none" stroke="url(#tend)" stroke-width="1.9" stroke-linecap="round"/>
+
+  <!-- bell -->
+  <path d="M32 4 q20 0 21 21 q0 8 -6 10 q-6 -5 -15 -5 q-9 0 -15 5 q-6 -2 -6 -10 q1 -21 21 -21 z" fill="url(#bell)"/>
+  <!-- bell ribs -->
+  <path d="M32 6 q0 12 0 24" fill="none" stroke="#DFFAFF" stroke-width="1" opacity="0.45"/>
+  <path d="M22 9 q-4 11 -3 21" fill="none" stroke="#DFFAFF" stroke-width="0.9" opacity="0.32"/>
+  <path d="M42 9 q4 11 3 21" fill="none" stroke="#DFFAFF" stroke-width="0.9" opacity="0.32"/>
+  <!-- rim -->
+  <path d="M12 29 q20 8 40 0" fill="none" stroke="#B7F2FF" stroke-width="1.6" opacity="0.6"/>
+
+  <!-- core -->
+  <circle cx="32" cy="22" r="11" fill="url(#core)"/>
+  <circle cx="32" cy="22" r="4.2" fill="#FFFFFF" opacity="0.95"/>
+</svg>

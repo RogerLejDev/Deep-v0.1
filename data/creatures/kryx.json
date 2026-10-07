@@ -1,0 +1,57 @@
+{
+  "id": "kryx",
+  "codex_number": 4,
+  "display_name": "Kryx",
+  "art": "res://assets/svg/creatures/kryx.svg",
+  "size_px": 24,
+  "rarity": "uncommon",
+  "behaviour": "aggressive",
+  "stats": { "hp": 38, "speed": 92, "damage": 13, "jump": 300 },
+  "senses": { "flee_range": 0, "aggro_range": 168, "wander_range": 120 },
+  "spawn": {
+    "depth_min": 55, "depth_max": 320, "weight": 6,
+    "biomes": ["rootlands"], "needs_floor": true,
+    "group_min": 1, "group_max": 2,
+    "night_only": false, "requires_darkness": false,
+    "near_block": 10, "near_block_radius": 7
+  },
+  "light": { "colour": [0.45, 0.85, 1.0], "radius": 72, "intensity": 0.34 },
+  "loot": [
+    { "item": "crystal_shard", "chance": 0.7, "min": 1, "max": 2 },
+    { "item": "iron_ore", "chance": 0.25, "min": 1, "max": 1 }
+  ],
+  "codex": {
+    "habitat": "Within seven metres of a lumen crystal seam. It does not stray far.",
+    "behaviour": "Territorial. Charges anything that breaks crystal, and keeps charging.",
+    "diet": "Unclear. It has no mouthparts suited to rock, yet it never leaves the seam.",
+    "resource": "Its carapace is crystal. Breaking one yields shards directly.",
+    "weakness": "The glowing core on the head. Everything else is armour.",
+    "lore": "Kryx do not eat the crystal and do not nest in it. They guard it. Something taught them to, or something made them that way."
+  },
+  "variants": [
+    {
+      "id": "normal", "display_name": "Kryx", "weight": 78,
+      "hue_shift": 0, "saturation": 1.0, "value": 1.0
+    },
+    {
+      "id": "crystal", "display_name": "Crystalline Kryx", "weight": 16,
+      "hue_shift": 0, "saturation": 0.35, "value": 1.3,
+      "emission_mul": 1.6, "hp_mul": 1.5, "loot_bonus": 2,
+      "note": "So far gone into the seam that the shell has become transparent."
+    },
+    {
+      "id": "alpha", "display_name": "Kryx Sovereign", "weight": 5,
+      "hue_shift": -38, "saturation": 1.3, "value": 0.85,
+      "scale_mul": 1.5, "hp_mul": 2.8, "damage_mul": 1.8, "speed_mul": 1.15,
+      "loot_bonus": 3, "rare": true,
+      "note": "One per chamber at most. The others defer to it."
+    },
+    {
+      "id": "corrupted", "display_name": "Voidtouched Kryx", "weight": 1,
+      "hue_shift": 118, "saturation": 1.1, "value": 0.7,
+      "scale_mul": 1.25, "hp_mul": 2.2, "damage_mul": 2.2, "speed_mul": 1.3,
+      "emission_mul": 0.6, "loot_bonus": 2, "rare": true,
+      "note": "The core has gone dark violet. It no longer guards anything."
+    }
+  ]
+}

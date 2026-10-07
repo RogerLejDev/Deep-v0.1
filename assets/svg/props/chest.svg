@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 26">
+  <defs>
+    <linearGradient id="cbody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7A5C3C"/><stop offset="100%" stop-color="#352616"/>
+    </linearGradient>
+    <linearGradient id="clid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#96734A"/><stop offset="100%" stop-color="#5A4228"/>
+    </linearGradient>
+  </defs>
+  <path d="M2 12 l28 0 l0 13 l-28 0 z" fill="url(#cbody)"/>
+  <path d="M2 12 q14 -11 28 0 z" fill="url(#clid)"/>
+  <path d="M2 12 l28 0 l0 1.6 l-28 0 z" fill="#2A1E12"/>
+  <!-- iron bands -->
+  <path d="M8 4.5 l2 0 l0 20.5 l-2 0 z" fill="#5C676F" opacity="0.85"/>
+  <path d="M22 4.5 l2 0 l0 20.5 l-2 0 z" fill="#5C676F" opacity="0.85"/>
+  <!-- lock -->
+  <path d="M14 11 l4 0 l0 6 l-4 0 z" fill="#B9BDC4"/>
+  <circle cx="16" cy="14" r="1.1" fill="#2A2116"/>
+</svg>

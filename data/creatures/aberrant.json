@@ -1,0 +1,42 @@
+{
+  "id": "aberrant",
+  "codex_number": 5,
+  "display_name": "Aberrant",
+  "art": "res://assets/svg/creatures/aberrant.svg",
+  "size_px": 34,
+  "rarity": "rare",
+  "behaviour": "phantom",
+  "stats": { "hp": 70, "speed": 66, "damage": 18, "jump": 0 },
+  "senses": { "flee_range": 0, "aggro_range": 210, "wander_range": 300 },
+  "spawn": {
+    "depth_min": 155, "depth_max": 320, "weight": 1,
+    "biomes": ["rootlands"], "needs_floor": false, "floats": true,
+    "group_min": 1, "group_max": 1,
+    "night_only": false, "requires_darkness": true
+  },
+  "light": { "colour": [1.0, 0.62, 0.3], "radius": 86, "intensity": 0.26 },
+  "loot": [
+    { "item": "ancient_fragment", "chance": 0.5, "min": 1, "max": 1 },
+    { "item": "deep_crystal_shard", "chance": 0.3, "min": 1, "max": 1 }
+  ],
+  "codex": {
+    "habitat": "Unlit space below 155 m. It has never been recorded nearer the surface.",
+    "behaviour": "Approaches without hurrying. Dissolves out of view when hurt, and reappears elsewhere.",
+    "diet": "No feeding behaviour has been observed. It does not appear to need any.",
+    "resource": "Worked stone, in fragments. It was carrying them.",
+    "weakness": "Sustained light holds it at a distance, but does not stop it.",
+    "lore": "Its limbs do not join to its body in a way that could have grown. It is carrying masonry. It is the first thing down here that looks assembled rather than born."
+  },
+  "variants": [
+    {
+      "id": "normal", "display_name": "Aberrant", "weight": 92,
+      "hue_shift": 0, "saturation": 1.0, "value": 1.0
+    },
+    {
+      "id": "unbound", "display_name": "Unbound Aberrant", "weight": 8,
+      "hue_shift": 72, "saturation": 1.2, "value": 1.15,
+      "scale_mul": 1.3, "hp_mul": 1.8, "damage_mul": 1.5, "rare": true,
+      "note": "More eyes. All of them open."
+    }
+  ]
+}
