@@ -35,6 +35,7 @@ func _ready() -> void:
 	_run("creature behaviour", _test_creature_behaviour)
 	_run("codex progression", _test_codex)
 	_run("ecology regrowth", _test_ecology)
+	_run("first expedition is possible", _test_first_expedition)
 	_run("chunk cache eviction", _test_chunk_cache)
 	_run("art pipeline", _test_art)
 	_run("save round trip", _test_save_round_trip)
@@ -750,6 +751,129 @@ func _test_ecology() -> void:
 	_check(absf(eco2.playtime() - eco.playtime()) < 0.01, "playtime lost in the ecology round trip")
 
 	world.queue_free()
+
+
+## The opening twenty minutes have to work on every seed, not just the one I
+## looked at. For a spread of seeds this checks the chain the player actually
+## walks: level ground at spawn, a cave mouth they can reach on foot, a descent
+## that reaches the first depth band, and enough copper down there to afford
+## the Copper Pick before anything harder blocks them.
+func _test_first_expedition() -> void:
+	for world_seed in [1, 20250101, 777, 84729128, 31337, 999999]:
+		var gen := WorldGen.new(world_seed)
+		var sx := gen.spawn_tile_x
+		var surf := gen.surface_row(sx)
+
+		# 1. Somewhere to stand, and headroom to stand in.
+		var head_clear := true
+		for dy in range(1, 5):
+			if BlockDB.is_solid(gen.block_at(sx, surf - dy)):
+				head_clear = false
+		if not _check(head_clear, "seed %d: spawn has no headroom" % world_seed):
+			continue
+
+		# 2. The landing pad must be walkable: no step taller than two tiles
+		#    anywhere across it, or the player starts in a hole.
+		var worst_step := 0
+		for dx in range(-8, 8):
+			var a := gen.surface_row(sx + dx)
+			var b := gen.surface_row(sx + dx + 1)
+			worst_step = maxi(worst_step, absi(a - b))
+		_check(worst_step <= 2,
+			"seed %d: spawn shelf has a %d-tile step" % [world_seed, worst_step])
+
+		# 3. The descent has to be genuinely walkable, not merely present, so
+		#    flood-fill the space the player can actually move through from
+		#    the spawn point and see how deep it goes.
+		var reach := _walkable_depth(gen, sx, surf)
+		_check(reach >= 40,
+			"seed %d: the player can only walk %d tiles down from spawn without digging"
+				% [world_seed, reach])
+
+		# 4. The first depth band must hold enough copper, and nothing in the
+		#    way may need a better tool than the one you start with.
+		var copper := 0
+		var gated := 0
+		var starter_tier := ItemDB.get_item("pick_starter").tool_tier
+		for ty in range(surf, surf + 120):
+			for tx in range(sx - 60, sx + 60):
+				var id := gen.block_at(tx, ty)
+				if id == BlockDB.COPPER_ORE:
+					copper += 1
+				var def := BlockDB.get_block(id)
+				if def.solid and not def.unbreakable and def.required_tier > starter_tier:
+					gated += 1
+		var needed: int = RecipeDB.by_id("pick_copper").inputs["copper_ore"]
+		_check(copper >= needed * 3,
+			"seed %d: only %d copper tiles in the opening area, recipe needs %d"
+				% [world_seed, copper, needed])
+		# Some gated material above 60 m is fine and desirable; a wall of it is
+		# not, because the player cannot get through it yet.
+		_check(gated < 1400,
+			"seed %d: %d tool-gated tiles in the opening area" % [world_seed, gated])
+
+		# 5. Root fibre for the recipe's other half must exist up here too.
+		var fibre := 0
+		for ty in range(surf, surf + 90):
+			for tx in range(sx - 50, sx + 50):
+				if gen.block_at(tx, ty) == BlockDB.ROOT:
+					fibre += 1
+		_check(fibre >= 20,
+			"seed %d: only %d root tiles near spawn" % [world_seed, fibre])
+
+
+## How far below the spawn surface the player can get on foot, without digging.
+##
+## Flood fill over standable positions, with the player's actual capabilities:
+## a two-tile-tall body, a step/jump of up to three tiles (the jump arc clears
+## about 50 px, which is three 16 px tiles), and falls of any height.
+func _walkable_depth(gen: WorldGen, sx: int, surf: int) -> int:
+	var start := Vector2i(sx, surf - 1)
+	var seen: Dictionary = {}
+	var queue: Array[Vector2i] = [start]
+	seen[start] = true
+	var deepest := 0
+	var budget := 24000
+
+	while not queue.is_empty() and budget > 0:
+		budget -= 1
+		var p: Vector2i = queue.pop_front()
+		deepest = maxi(deepest, p.y - surf)
+
+		for dx in [-1, 1]:
+			# Step across, step up to three tiles, or fall.
+			for dy in [0, -1, -2, -3]:
+				var n := Vector2i(p.x + dx, p.y + dy)
+				if seen.has(n) or not _fits(gen, n):
+					continue
+				# Only count it as a step if there is ground under it.
+				if not BlockDB.is_solid(gen.block_at(n.x, n.y + 1)):
+					continue
+				seen[n] = true
+				queue.append(n)
+			# Falling: drop to the first floor in the neighbouring column.
+			var side := Vector2i(p.x + dx, p.y)
+			if _fits(gen, side):
+				var landing := side
+				var drops := 0
+				while drops < 90 and not BlockDB.is_solid(gen.block_at(landing.x, landing.y + 1)):
+					landing.y += 1
+					drops += 1
+					if not _fits(gen, landing):
+						break
+				if drops > 0 and _fits(gen, landing) and not seen.has(landing):
+					seen[landing] = true
+					queue.append(landing)
+
+	return deepest
+
+
+## Is there room for a two-tile-tall body with its feet at `t`?
+func _fits(gen: WorldGen, t: Vector2i) -> bool:
+	if not GameConfig.in_bounds(t.x, t.y):
+		return false
+	return not BlockDB.is_solid(gen.block_at(t.x, t.y)) \
+		and not BlockDB.is_solid(gen.block_at(t.x, t.y - 1))
 
 
 ## The cache must stay bounded while the player roams, must never drop a chunk

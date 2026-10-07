@@ -39,6 +39,10 @@ func _ready() -> void:
 		Game.inventory.add(id, 24)
 	Game.inventory.add("lantern", 1)
 
+	# Pull back to show the spawn shelf and the cave mouth together, since
+	# "there is an opening in the ground nearby" is the opening beat.
+	await _wide_surface_shot()
+
 	await _descend(26.0, "02_topsoil")
 	await _descend(78.0, "03_caverns")
 	await _descend(165.0, "04_deep")
@@ -88,6 +92,25 @@ func _shot(name: String) -> void:
 	var path := "%s/%s.png" % [OUT_DIR, name]
 	var err := img.save_png(path)
 	print("SHOT %s -> %s (%dx%d) err=%d" % [name, path, img.get_width(), img.get_height(), err])
+
+
+func _wide_surface_shot() -> void:
+	var camera: CameraRig = _root.get("camera")
+	var world: DeepWorld = _root.get("world")
+	var player: Player = _root.get("player")
+	if camera == null or world == null:
+		return
+	# Walk the player toward the mouth so the shot frames the actual route.
+	var mouth_dir: int = 1 if (world.world_seed & 1) == 0 else -1
+	var tx := GameConfig.world_to_tile(player.global_position).x + mouth_dir * 14
+	var ty := world.surface_row(tx) - 2
+	player.global_position = GameConfig.tile_centre(tx, ty)
+	camera.configure(player)
+	camera.zoom = Vector2(1.25, 1.25)
+	await _settle(40)
+	await _shot("01b_cave_mouth")
+	camera.zoom = Vector2(CameraRig.BASE_ZOOM, CameraRig.BASE_ZOOM)
+	await _settle(4)
 
 
 func _descend(metres: float, name: String) -> void:

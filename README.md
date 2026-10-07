@@ -298,3 +298,58 @@ DEEP/
 ├── tests/                     headless suite
 └── tools/                     screenshot harness
 ```
+
+---
+
+## Verification
+
+`tests/TestRunner.tscn` runs 1003 assertions headlessly in about a minute and
+exits non-zero on failure. It covers:
+
+- **Compilation** — every script and shader loads; both scenes instantiate.
+- **Registries** — every block drop is a real item, every item icon shape
+  exists, every block is breakable by some tool, tool power strictly increases.
+- **Determinism** — identical seeds produce identical worlds and identical
+  structures; different seeds genuinely differ; bulk chunk generation agrees
+  with the per-tile function.
+- **Generation sanity** — sky above the surface, bedrock shell, caves neither
+  too solid nor hollow, every progression material reachable, structures never
+  breach the surface.
+- **The first expedition**, on six seeds — level ground at spawn, no step the
+  player cannot climb, and a flood fill over actually-walkable positions
+  (two-tile body, three-tile jump, falls of any height) proving the player can
+  get at least 40 tiles down *without digging*, with enough copper and root
+  fibre in that opening area to afford the Copper Pick.
+- **Collision merging** — a solid chunk becomes one rectangle, an empty chunk
+  none, a checkerboard is still fully covered, and a chunk of crystal yields at
+  most four clustered lights.
+- **Inventory** — stacking, splitting across slots, non-stacking tools,
+  overflow reporting, smallest-stack-first removal, merge-and-swap moves, and
+  a round trip that drops stale item ids.
+- **Crafting** — missing inputs, wrong station, inputs consumed exactly once,
+  and every recipe referencing real items and reachable stations.
+- **Creatures** — data integrity, unique Codex numbers, deterministic and
+  correctly weighted variant rolls, the legendary absent from every spawn
+  table, and each behaviour profile actually doing its thing (a Grib flees, a
+  Kryx charges, a Molo digs through a wall instead of turning, a wounded
+  Aberrant dissolves, the apex cycles its phases and opens a damage window).
+- **Codex** — sightings open entries, fields stay locked until observed,
+  observing an unseen species does nothing, defeating reveals resource and
+  weakness, variants raise completion, depth range tracking, and a round trip
+  that drops species no longer in the data.
+- **Ecology** — hunting thins a region and it recovers; a mined vein regrows
+  and a dug tunnel does not.
+- **Saves** — a full round trip including world edits, then rebuilding the
+  world from seed + mods and confirming both the edits *and* the untouched
+  terrain match; plus rejection of malformed JSON, foreign JSON, incomplete
+  payloads and tampered checksums.
+- **The chunk cache** — stays bounded, never drops a live chunk, regenerates an
+  evicted chunk identically, and keeps player modifications across eviction.
+- **The art pipeline** — exact output sizes, cache hits returning the same
+  object, variant recolouring actually changing pixels, silhouettes flattened
+  but shaped, and every item icon rendering something.
+- **Two live playthroughs** in the real Game scene — spawn, stream to depth and
+  back, mine twenty blocks and collect the drops, place a block, save, tear
+  the scene down, reload and verify persistence; then spawn every species,
+  discover one through the real observation path, and trigger the
+  `UNKNOWN SIGNAL` event.

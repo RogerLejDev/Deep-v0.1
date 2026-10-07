@@ -197,23 +197,33 @@ func _is_cave(tx: int, ty: int, depth: int, surf: int) -> bool:
 	return false
 
 
-## A sloping tunnel from the surface near spawn down into the first cave layer.
+## A sloping fissure from the surface near spawn down into the first cave
+## layer. This is the one piece of hand-placed level design in the world, and
+## it exists because "there is an opening in the ground nearby" has to be true
+## on every seed, not most of them.
+##
+## It has to stay *walkable*: wide enough to fall into and climb back out of,
+## and sloped gently enough that the player descends by walking rather than by
+## digging. An earlier version curved sideways faster than it descended, which
+## left every vertical column blocked and made the descent read as a dead end.
 func _in_starter_shaft(tx: int, ty: int, surf: int) -> bool:
-	var mouth_x := spawn_tile_x + (20 if (world_seed & 1) == 0 else -20)
+	var mouth_x := spawn_tile_x + (22 if (world_seed & 1) == 0 else -22)
 	var top := surface_row(mouth_x)
-	var bottom := top + 46
+	var bottom := top + 58
 	if ty < top - 1 or ty > bottom:
 		return false
-	var t := float(ty - top) / float(bottom - top)
-	# Gentle S-curve so it reads as a natural fissure, not a drilled hole.
-	var centre := float(mouth_x) + sin(t * PI * 1.35) * 11.0 + t * 6.0
-	var radius := lerpf(2.6, 4.2, t)
+	var t: float = clampf(float(ty - top) / float(bottom - top), 0.0, 1.0)
+	# A lazy S, drifting at most six tiles sideways over the full descent, so
+	# the slope never exceeds what a walk-and-jump can follow.
+	var centre := float(mouth_x) + sin(t * PI) * 6.0 + t * 4.0
+	# Widens as it goes: a narrow mouth you notice, a chamber you arrive in.
+	var radius: float = lerpf(3.1, 6.0, t)
 	var dist: float = absf(float(tx) - centre)
 	if dist > radius:
 		return false
-	# Do not eat the surface itself more than a mouth's worth.
+	# Do not eat more of the surface than a mouth's worth.
 	if ty < surf:
-		return dist < radius * 0.55
+		return dist < radius * 0.45
 	return true
 
 
