@@ -144,14 +144,22 @@ func block_at(tx: int, ty: int) -> int:
 
 
 func _above_surface(tx: int, ty: int, surf: int) -> int:
-	# A thin band of hanging roots and the odd rock arch breaks up the skyline.
-	if ty == surf - 1:
+	# Ground cover and low root growth along the skyline. Everything here must
+	# be anchored to the column's own surface, never floating: an isolated tile
+	# in open sky reads as a rendering bug, not as scenery.
+	var height_above := surf - ty
+	if height_above <= 0 or height_above > 3:
+		return BlockDB.AIR
+	if height_above == 1:
 		var r := RngUtil.to_unit(RngUtil.hash3(world_seed, tx, 9001))
 		if r > 0.80:
 			return BlockDB.GLOW_MOSS
-	if ty >= surf - 4:
-		var rr := _n_root.get_noise_2d(float(tx) * 2.2, float(ty) * 1.4)
-		if rr > 0.74:
+	var rr := _n_root.get_noise_2d(float(tx) * 2.2, float(ty) * 1.4)
+	# Taller root growth needs root below it, so a clump is always a clump.
+	if rr > 0.74:
+		if height_above == 1:
+			return BlockDB.ROOT
+		if _n_root.get_noise_2d(float(tx) * 2.2, float(ty + 1) * 1.4) > 0.74:
 			return BlockDB.ROOT
 	return BlockDB.AIR
 

@@ -93,6 +93,9 @@ func _build_visual() -> void:
 	_material.set_shader_parameter("emission_strength", clampf(data.light_intensity * variant.emission_mul, 0.0, 2.0))
 	_material.set_shader_parameter("tint", Color.WHITE)
 	_material.set_shader_parameter("squash", Vector2.ONE)
+	# Enough self-visibility to read a shape in an unlit cave — the "what was
+	# that?" moment — but not enough to identify one without light.
+	_material.set_shader_parameter("ambient_floor", 0.15)
 	_sprite.material = _material
 
 

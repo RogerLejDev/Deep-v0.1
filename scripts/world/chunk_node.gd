@@ -90,20 +90,31 @@ func _fill_images() -> void:
 	var cs := GameConfig.CHUNK_TILES
 	var dim := cs + PAD * 2
 	var origin := data.origin_tile()
+
+	# Read the padded region once into a flat array. Everything below then
+	# indexes that array instead of calling back through World for each
+	# neighbour lookup, which is what made meshing a chunk expensive.
+	var ids := PackedByteArray()
+	ids.resize(dim * dim)
+	for py in dim:
+		var ty := origin.y + py - PAD
+		var row := py * dim
+		for px in dim:
+			if px >= PAD and py >= PAD and px < cs + PAD and py < cs + PAD:
+				ids[row + px] = data.get_local(px - PAD, py - PAD)
+			else:
+				ids[row + px] = int(_tile_lookup.call(origin.x + px - PAD, ty))
+
 	for py in dim:
 		var ty := origin.y + py - PAD
 		for px in dim:
-			var tx := origin.x + px - PAD
-			var inside := px >= PAD and py >= PAD and px < cs + PAD and py < cs + PAD
-			var id: int
-			if inside:
-				id = data.get_local(px - PAD, py - PAD)
-			else:
-				id = int(_tile_lookup.call(tx, ty))
-			_write_tile(px, py, tx, ty, id)
+			_write_tile(px, py, origin.x + px - PAD, ty, ids[py * dim + px], ids, dim)
 
 
-func _write_tile(px: int, py: int, tx: int, ty: int, id: int) -> void:
+func _write_tile(
+	px: int, py: int, tx: int, ty: int, id: int,
+	ids: PackedByteArray, dim: int
+) -> void:
 	var def := BlockDB.get_block(id)
 	var solid := def.solid
 
@@ -113,7 +124,7 @@ func _write_tile(px: int, py: int, tx: int, ty: int, id: int) -> void:
 	# fringing to black.
 	var source := def
 	if not solid:
-		source = _nearest_solid_def(tx, ty)
+		source = _nearest_solid_def(px, py, ids, dim)
 
 	var seed_h := RngUtil.hash3(tx * 73856093, ty * 19349663, 0x5F3759)
 	var r1 := RngUtil.to_signed(seed_h)
@@ -159,14 +170,20 @@ func _write_tile(px: int, py: int, tx: int, ty: int, id: int) -> void:
 	))
 
 
-func _nearest_solid_def(tx: int, ty: int) -> BlockDef:
-	const OFFSETS: Array[Vector2i] = [
-		Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0),
-		Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1),
-	]
-	for o in OFFSETS:
-		var n := int(_tile_lookup.call(tx + o.x, ty + o.y))
-		var d := BlockDB.get_block(n)
+const NEIGHBOUR_OFFSETS: Array[Vector2i] = [
+	Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0),
+	Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1),
+]
+
+## Material an empty tile borrows its look from, so anti-aliased rims do not
+## fringe to black. Reads the pre-fetched padded array, never the World.
+func _nearest_solid_def(px: int, py: int, ids: PackedByteArray, dim: int) -> BlockDef:
+	for o in NEIGHBOUR_OFFSETS:
+		var nx := px + o.x
+		var ny := py + o.y
+		if nx < 0 or ny < 0 or nx >= dim or ny >= dim:
+			continue
+		var d := BlockDB.get_block(ids[ny * dim + nx])
 		if d.solid:
 			return d
 	return BlockDB.get_block(BlockDB.STONE)

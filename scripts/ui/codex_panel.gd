@@ -78,13 +78,21 @@ func build_content() -> void:
 
 	# The plate the illustration sits on, so art always has a frame.
 	var plate := UiKit.make_panel(Color(0.027, 0.047, 0.059, 0.9), UiKit.EDGE)
-	plate.custom_minimum_size = Vector2(196, ILLUSTRATION_HEIGHT + 16)
+	plate.custom_minimum_size = Vector2(216, ILLUSTRATION_HEIGHT + 40)
 	top.add_child(plate)
+	# A margin inside the plate, so wide art (the Lumreaper is 96 units across
+	# a 64-unit frame) is never clipped by the frame it sits in.
+	var art_margin := MarginContainer.new()
+	art_margin.add_theme_constant_override("margin_left", 8)
+	art_margin.add_theme_constant_override("margin_right", 8)
+	art_margin.add_theme_constant_override("margin_top", 8)
+	art_margin.add_theme_constant_override("margin_bottom", 8)
+	plate.add_child(art_margin)
 	_art = TextureRect.new()
 	_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_art.custom_minimum_size = Vector2(180, ILLUSTRATION_HEIGHT)
-	plate.add_child(_art)
+	art_margin.add_child(_art)
 
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -266,6 +274,12 @@ func _show_entry(species_id: String) -> void:
 		_art.texture = SvgFactory.sprite(data.art_path, ILLUSTRATION_HEIGHT)
 	else:
 		_art.texture = SvgFactory.silhouette(data.art_path, ILLUSTRATION_HEIGHT, Color(0.09, 0.11, 0.16))
+	# Nudge wide species down a size so they sit inside the plate rather than
+	# against its edges.
+	if _art.texture != null and _art.texture.get_width() > 190:
+		var shrunk: int = int(round(float(ILLUSTRATION_HEIGHT) * 190.0 / float(_art.texture.get_width())))
+		_art.texture = (SvgFactory.sprite(data.art_path, shrunk) if known
+			else SvgFactory.silhouette(data.art_path, shrunk, Color(0.09, 0.11, 0.16)))
 
 	if known:
 		_rarity_label.text = data.rarity_name()

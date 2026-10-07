@@ -35,8 +35,11 @@ vec3 deep_gather_light(vec2 world_pos) {
 		// Soft quadratic falloff; flicker rides on the intensity only so the
 		// light's reach stays stable and the wobble reads as a flame rather
 		// than a pulsing sphere.
+		// Falloff shaped so a lamp gives a readable *working area* rather than
+		// a bright dot: still clearly brightest at the source, but roughly a
+		// third of full value at half the radius instead of a quarter.
 		float att = 1.0 - smoothstep(0.0, p.z, d);
-		att *= att;
+		att *= 0.38 + 0.62 * att;
 		float flicker = 1.0 + sin(deep_time * 11.0 + c.a * 6.283) * 0.07
 			+ sin(deep_time * 23.0 + c.a * 12.9) * 0.04;
 		acc += c.rgb * att * p.w * flicker;

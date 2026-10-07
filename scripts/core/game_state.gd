@@ -150,7 +150,7 @@ func mining_tier() -> int:
 ## Light radius in pixels: base vision, plus the lantern if owned, doubled
 ## while a Lumen Flask is burning.
 func light_radius() -> float:
-	var r := 132.0
+	var r := 152.0
 	if inventory != null and inventory.has("lantern"):
 		r += ItemDB.get_item("lantern").light_radius
 	if effects.has("lumen_flask"):

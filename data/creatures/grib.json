@@ -3,21 +3,55 @@
   "codex_number": 1,
   "display_name": "Grib",
   "art": "res://assets/svg/creatures/grib.svg",
-  "size_px": 19,
+  "size_px": 23,
   "rarity": "common",
   "behaviour": "skittish",
-  "stats": { "hp": 14, "speed": 58, "damage": 0, "jump": 240 },
-  "senses": { "flee_range": 92, "aggro_range": 0, "wander_range": 140 },
-  "spawn": {
-    "depth_min": -12, "depth_max": 70, "weight": 10,
-    "biomes": ["rootlands"], "needs_floor": true,
-    "group_min": 1, "group_max": 3,
-    "night_only": false, "requires_darkness": false
+  "stats": {
+    "hp": 14,
+    "speed": 58,
+    "damage": 0,
+    "jump": 240
   },
-  "light": { "colour": [0.55, 0.78, 0.45], "radius": 0, "intensity": 0.0 },
+  "senses": {
+    "flee_range": 92,
+    "aggro_range": 0,
+    "wander_range": 140
+  },
+  "spawn": {
+    "depth_min": -12,
+    "depth_max": 70,
+    "weight": 10,
+    "biomes": [
+      "rootlands"
+    ],
+    "needs_floor": true,
+    "group_min": 1,
+    "group_max": 3,
+    "night_only": false,
+    "requires_darkness": false
+  },
+  "light": {
+    "colour": [
+      0.55,
+      0.78,
+      0.45
+    ],
+    "radius": 0,
+    "intensity": 0.0
+  },
   "loot": [
-    { "item": "root_fibre", "chance": 0.75, "min": 1, "max": 2 },
-    { "item": "glowcap", "chance": 0.12, "min": 1, "max": 1 }
+    {
+      "item": "root_fibre",
+      "chance": 0.75,
+      "min": 1,
+      "max": 2
+    },
+    {
+      "item": "glowcap",
+      "chance": 0.12,
+      "min": 1,
+      "max": 1
+    }
   ],
   "codex": {
     "habitat": "Topsoil and the first few metres of root cover. Never seen below 70 m.",
@@ -29,19 +63,35 @@
   },
   "variants": [
     {
-      "id": "normal", "display_name": "Grib", "weight": 88,
-      "hue_shift": 0, "saturation": 1.0, "value": 1.0
+      "id": "normal",
+      "display_name": "Grib",
+      "weight": 88,
+      "hue_shift": 0,
+      "saturation": 1.0,
+      "value": 1.0
     },
     {
-      "id": "mossbound", "display_name": "Mossbound Grib", "weight": 11,
-      "hue_shift": -18, "saturation": 1.2, "value": 0.88,
-      "scale_mul": 1.12, "hp_mul": 1.4, "loot_bonus": 1,
+      "id": "mossbound",
+      "display_name": "Mossbound Grib",
+      "weight": 11,
+      "hue_shift": -18,
+      "saturation": 1.2,
+      "value": 0.88,
+      "scale_mul": 1.12,
+      "hp_mul": 1.4,
+      "loot_bonus": 1,
       "note": "Older specimens are slowly overgrown by the moss they eat."
     },
     {
-      "id": "pallid", "display_name": "Pallid Grib", "weight": 1,
-      "hue_shift": 24, "saturation": 0.22, "value": 1.25,
-      "scale_mul": 0.92, "speed_mul": 1.25, "rare": true,
+      "id": "pallid",
+      "display_name": "Pallid Grib",
+      "weight": 1,
+      "hue_shift": 24,
+      "saturation": 0.22,
+      "value": 1.25,
+      "scale_mul": 0.92,
+      "speed_mul": 1.25,
+      "rare": true,
       "note": "Born underground and never surfaced. The eye is almost blind."
     }
   ]

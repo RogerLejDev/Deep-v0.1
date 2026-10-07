@@ -35,6 +35,8 @@ func _ready() -> void:
 	_run("creature behaviour", _test_creature_behaviour)
 	_run("codex progression", _test_codex)
 	_run("ecology regrowth", _test_ecology)
+	_run("chunk cache eviction", _test_chunk_cache)
+	_run("art pipeline", _test_art)
 	_run("save round trip", _test_save_round_trip)
 	_run("save corruption handling", _test_save_corruption)
 	await _run_async("live world: stream + mine 20 + persist", _test_live_world)
@@ -748,6 +750,106 @@ func _test_ecology() -> void:
 	_check(absf(eco2.playtime() - eco.playtime()) < 0.01, "playtime lost in the ecology round trip")
 
 	world.queue_free()
+
+
+## The cache must stay bounded while the player roams, must never drop a chunk
+## that is currently on screen, and must rebuild an evicted chunk identically.
+func _test_chunk_cache() -> void:
+	var world := DeepWorld.new()
+	add_child(world)
+	world.initialize(606060)
+
+	# Touch far more chunks than the cache can hold.
+	var sample_tile := Vector2i(200, GameConfig.SURFACE_ROW + 300)
+	var before := world.get_tile(sample_tile.x, sample_tile.y)
+	for cy in range(2, 22):
+		for cx in range(1, 12):
+			world.get_tile(cx * GameConfig.CHUNK_TILES + 3, cy * GameConfig.CHUNK_TILES + 3)
+	_check(world.get_tile(sample_tile.x, sample_tile.y) == before,
+		"a chunk regenerated differently after being evicted")
+
+	# A player modification must survive eviction, because it lives outside the
+	# chunk cache entirely.
+	_check(world.set_tile(sample_tile.x, sample_tile.y, BlockDB.PLANK, false), "set_tile failed")
+	for cy in range(2, 22):
+		for cx in range(1, 12):
+			world.get_tile(cx * GameConfig.CHUNK_TILES + 7, cy * GameConfig.CHUNK_TILES + 7)
+	_check(world.get_tile(sample_tile.x, sample_tile.y) == BlockDB.PLANK,
+		"a player modification was lost when its chunk was evicted")
+
+	# Streaming must keep the live set bounded.
+	world.stream_around(world.spawn_position())
+	for _i in 40:
+		world.stream_around(world.spawn_position())
+	var live := world.live_chunk_count()
+	var expected: int = (GameConfig.CHUNK_LOAD_RADIUS_X * 2 + 1) * (GameConfig.CHUNK_LOAD_RADIUS_Y * 2 + 1)
+	_check(live > 0 and live <= expected,
+		"live chunk count is %d, expected at most %d" % [live, expected])
+
+	world.queue_free()
+
+
+## The art pipeline must produce exactly-sized textures and must actually
+## change colour per variant (a silent no-op here would make every variant look
+## identical while the Codex claimed otherwise).
+func _test_art() -> void:
+	var data := CreatureDB.get_species("kryx")
+	var base := SvgFactory.sprite(data.art_path, 40)
+	_check(base != null and base.get_height() == 40,
+		"sprite() did not produce a 40px texture")
+	_check(base.get_width() > 0, "sprite() produced a zero-width texture")
+
+	# Caching must return the same object, not a rebuild.
+	_check(SvgFactory.sprite(data.art_path, 40) == base, "sprite() cache missed")
+
+	# A recoloured variant must differ from the base.
+	var variant: CreatureVariant = null
+	for v in data.variants:
+		if absf(v.hue_shift) > 1.0:
+			variant = v
+			break
+	if _check(variant != null, "kryx has no recoloured variant to test"):
+		var tinted := SvgFactory.sprite(
+			data.art_path, 40, variant.hue_shift, variant.saturation, variant.value, variant.overlay)
+		_check(tinted != base, "a recoloured variant returned the base texture")
+		var a := base.get_image()
+		var b := tinted.get_image()
+		var differences := 0
+		for y in range(0, a.get_height(), 3):
+			for x in range(0, a.get_width(), 3):
+				if a.get_pixel(x, y).a > 0.1 and a.get_pixel(x, y) != b.get_pixel(x, y):
+					differences += 1
+		_check(differences > 10, "variant recolouring changed almost nothing (%d pixels)" % differences)
+
+	# Silhouettes must keep the shape but flatten the colour.
+	var sil := SvgFactory.silhouette(data.art_path, 40)
+	_check(sil.get_height() == 40, "silhouette() ignored the target height")
+	var si := sil.get_image()
+	var opaque := 0
+	var coloured := 0
+	for y in si.get_height():
+		for x in si.get_width():
+			var c := si.get_pixel(x, y)
+			if c.a > 0.5:
+				opaque += 1
+				if c.v > 0.3:
+					coloured += 1
+	_check(opaque > 50, "the silhouette is empty")
+	_check(coloured == 0, "the silhouette is not flattened (%d bright pixels)" % coloured)
+
+	# Every item must produce a real icon rather than the error colour.
+	for id in ItemDB.ids():
+		var icon := IconFactory.icon_for(id, 32)
+		if not _check(icon != null and icon.get_height() > 0, "no icon for '%s'" % id):
+			continue
+		var img := icon.get_image()
+		var visible := 0
+		for y in range(0, img.get_height(), 2):
+			for x in range(0, img.get_width(), 2):
+				if img.get_pixel(x, y).a > 0.2:
+					visible += 1
+		if not _check(visible > 8, "the icon for '%s' is blank" % id):
+			break
 
 
 func _find_block(world: DeepWorld, block_id: int) -> Vector2i:

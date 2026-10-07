@@ -31,8 +31,8 @@ func _build_backdrop() -> void:
 	_backdrop_mat.shader = load(BACKDROP_SHADER) as Shader
 	_backdrop_mat.set_shader_parameter("surface_y", 1024.0)
 	_backdrop_mat.set_shader_parameter("world_bottom_y", 11264.0)
-	_backdrop_mat.set_shader_parameter("underground", 0.34)
-	_backdrop_mat.set_shader_parameter("ambient_light", Vector3(0.85, 0.88, 0.95))
+	_backdrop_mat.set_shader_parameter("underground", 0.0)
+	_backdrop_mat.set_shader_parameter("ambient_light", Vector3(0.95, 0.96, 1.0))
 	_backdrop_mat.set_shader_parameter("zone_tint", Vector3(0.22, 0.30, 0.40))
 	_backdrop_mat.set_shader_parameter("view_size", Vector2(1280, 720))
 	bg.material = _backdrop_mat
@@ -260,5 +260,5 @@ func _process(delta: float) -> void:
 		return
 	_backdrop_mat.set_shader_parameter("drift", _drift)
 	# Slowly pan the backdrop so the menu breathes.
-	_backdrop_mat.set_shader_parameter("view_origin", Vector2(_drift * 9.0, 880.0 + sin(_drift * 0.15) * 36.0))
+	_backdrop_mat.set_shader_parameter("view_origin", Vector2(_drift * 7.0, 760.0 + sin(_drift * 0.13) * 30.0))
 	_backdrop_mat.set_shader_parameter("view_size", size)

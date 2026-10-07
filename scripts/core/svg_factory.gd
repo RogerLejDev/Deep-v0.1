@@ -64,30 +64,36 @@ static func sprite(
 	if _tex_cache.has(key):
 		return _tex_cache[key]
 
-	var src := source_image(path)
-	var img := src.duplicate() as Image
+	var img := (source_image(path).duplicate() as Image)
 
-	var needs_recolour := (
-		absf(hue_shift) > 0.01
-		or absf(saturation - 1.0) > 0.01
-		or absf(value - 1.0) > 0.01
-		or overlay.a > 0.004
-	)
-	if needs_recolour:
-		_recolour(img, hue_shift, saturation, value, overlay)
-
+	# Resize BEFORE recolouring, never after. The sources rasterise at 4x the
+	# viewBox (256px), so recolouring first would mean ~65k pixel conversions
+	# per variant in GDScript — which is what made opening the Codex, with its
+	# twenty-odd variant thumbnails, take seconds. On the resized image it is
+	# a few thousand, and the result is visually identical because an HSV
+	# rotation and a resample commute closely enough at these sizes.
 	if target_height > 0 and img.get_height() != target_height:
 		var ratio := float(img.get_width()) / float(maxi(img.get_height(), 1))
 		var w: int = maxi(1, int(round(float(target_height) * ratio)))
 		img.resize(w, target_height, Image.INTERPOLATE_LANCZOS)
+
+	if _needs_recolour(hue_shift, saturation, value, overlay):
+		_recolour(img, hue_shift, saturation, value, overlay)
 
 	var tex := ImageTexture.create_from_image(img)
 	_tex_cache[key] = tex
 	return tex
 
 
-## Rasterise SVG markup produced in code. `height` is the output pixel height;
-## the markup is expected to declare a viewBox so the scale can be derived.
+static func _needs_recolour(hue_shift: float, saturation: float, value: float, overlay: Color) -> bool:
+	return (
+		absf(hue_shift) > 0.01
+		or absf(saturation - 1.0) > 0.01
+		or absf(value - 1.0) > 0.01
+		or overlay.a > 0.004
+	)
+
+
 static func from_markup(markup: String, cache_key: String, height: int, view_height: float = 64.0) -> ImageTexture:
 	var key := "markup:%s|%d" % [cache_key, height]
 	if _tex_cache.has(key):
@@ -137,18 +143,22 @@ static func silhouette(path: String, target_height: int, tint: Color = Color(0.0
 	if _tex_cache.has(key):
 		return _tex_cache[key]
 	var img := (source_image(path).duplicate() as Image)
+	if target_height > 0 and img.get_height() != target_height:
+		var ratio := float(img.get_width()) / float(maxi(img.get_height(), 1))
+		img.resize(maxi(1, int(round(float(target_height) * ratio))), target_height,
+			Image.INTERPOLATE_LANCZOS)
+	# Flatten to the tint, keeping only the alpha shape.
 	var w := img.get_width()
 	var h := img.get_height()
-	for y in h:
-		for x in w:
-			var a := img.get_pixel(x, y).a
-			if a <= 0.003:
-				continue
-			img.set_pixel(x, y, Color(tint.r, tint.g, tint.b, a))
-	if target_height > 0 and h != target_height:
-		var ratio := float(w) / float(maxi(h, 1))
-		img.resize(maxi(1, int(round(float(target_height) * ratio))), target_height, Image.INTERPOLATE_LANCZOS)
-	var tex := ImageTexture.create_from_image(img)
+	var data := img.get_data()
+	for i in range(0, data.size(), 4):
+		if data[i + 3] == 0:
+			continue
+		data[i] = int(tint.r * 255.0)
+		data[i + 1] = int(tint.g * 255.0)
+		data[i + 2] = int(tint.b * 255.0)
+	var flat := Image.create_from_data(w, h, false, Image.FORMAT_RGBA8, data)
+	var tex := ImageTexture.create_from_image(flat)
 	_tex_cache[key] = tex
 	return tex
 

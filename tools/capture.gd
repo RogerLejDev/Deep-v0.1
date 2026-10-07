@@ -13,6 +13,7 @@ var _root: Node = null
 
 
 func _ready() -> void:
+	Engine.max_fps = 60
 	DirAccess.make_dir_recursive_absolute(OUT_DIR)
 	await get_tree().process_frame
 

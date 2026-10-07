@@ -15,6 +15,8 @@ var light_sources: Array[Dictionary] = []
 var dirty: bool = true
 ## True once collision_rects and light_sources have been computed.
 var analysed: bool = false
+## Monotonic stamp of the last access, used for O(1) cache eviction.
+var last_used: int = 0
 
 
 func _init(p_coord: Vector2i) -> void:

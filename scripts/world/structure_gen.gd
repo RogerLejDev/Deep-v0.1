@@ -20,6 +20,11 @@ const KIND_ANCIENT_VAULT: int = 3
 
 var world_seed: int = 0
 
+## Vector2i cell -> [kind, centre]. Deciding a cell costs several hashes, and
+## every tile used to re-decide the nine cells around it. Caching turns chunk
+## generation from thousands of hashes into a few dozen.
+var _cells: Dictionary = {}
+
 
 func _init(p_seed: int) -> void:
 	world_seed = p_seed
@@ -35,6 +40,18 @@ func block_at(tx: int, ty: int, surf: int) -> int:
 			if r != NO_OVERRIDE:
 				return r
 	return NO_OVERRIDE
+
+
+## Cached {kind, centre} for one site cell.
+func _cell(cx: int, cy: int) -> Array:
+	var key := Vector2i(cx, cy)
+	var hit = _cells.get(key)
+	if hit != null:
+		return hit
+	var kind := _site_kind(cx, cy)
+	var entry: Array = [kind, _site_centre(cx, cy) if kind != KIND_NONE else Vector2i.ZERO]
+	_cells[key] = entry
+	return entry
 
 
 func _site_kind(cx: int, cy: int) -> int:
@@ -64,10 +81,15 @@ func _site_centre(cx: int, cy: int) -> Vector2i:
 
 
 func _query_site(cx: int, cy: int, tx: int, ty: int, surf: int) -> int:
-	var kind := _site_kind(cx, cy)
+	var entry := _cell(cx, cy)
+	var kind: int = entry[0]
 	if kind == KIND_NONE:
 		return NO_OVERRIDE
-	var centre := _site_centre(cx, cy)
+	var centre: Vector2i = entry[1]
+	# Cheap rejection before any carve maths: every structure fits inside this
+	# radius of its centre.
+	if absi(tx - centre.x) > 26 or absi(ty - centre.y) > 20:
+		return NO_OVERRIDE
 	# Never punch a structure through the surface.
 	if centre.y < surf + 16:
 		return NO_OVERRIDE
@@ -160,8 +182,8 @@ func sites_near(tile: Vector2i, cells: int = 2) -> Array[Dictionary]:
 	var cy := floori(float(tile.y) / SITE)
 	for ny in range(cy - cells, cy + cells + 1):
 		for nx in range(cx - cells, cx + cells + 1):
-			var k := _site_kind(nx, ny)
-			if k == KIND_NONE:
+			var entry := _cell(nx, ny)
+			if int(entry[0]) == KIND_NONE:
 				continue
-			out.append({"kind": k, "centre": _site_centre(nx, ny)})
+			out.append({"kind": int(entry[0]), "centre": entry[1] as Vector2i})
 	return out

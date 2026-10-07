@@ -105,7 +105,14 @@ func overall_completion() -> float:
 # --- Recording ---------------------------------------------------------------
 
 ## Returns true if this was a brand-new species (worth a full-screen reveal).
-func note_sighting(species_id: String, variant_id: String, depth_metres: float) -> bool:
+## `announce` is false when the Codex is being filled in bulk (a debug unlock,
+## or a load), where firing the reveal queue would be wrong and expensive.
+func note_sighting(
+	species_id: String,
+	variant_id: String,
+	depth_metres: float,
+	announce: bool = true
+) -> bool:
 	var brand_new := not entries.has(species_id)
 	if brand_new:
 		entries[species_id] = {
@@ -135,8 +142,9 @@ func note_sighting(species_id: String, variant_id: String, depth_metres: float) 
 	entries[species_id] = e
 
 	if brand_new:
-		EventBus.codex_entry_discovered.emit(species_id, variant_id)
-	elif new_variant:
+		if announce:
+			EventBus.codex_entry_discovered.emit(species_id, variant_id)
+	elif new_variant and announce:
 		EventBus.toast_requested.emit(
 			"VARIANT RECORDED · " + CreatureDB.get_variant(species_id, variant_id).display_name.to_upper(),
 			"variant")
@@ -190,9 +198,9 @@ func _emit_progress() -> void:
 func debug_unlock_all() -> void:
 	for id in CreatureDB.species_ids():
 		var data := CreatureDB.get_species(id)
-		note_sighting(id, data.default_variant_id(), data.depth_min)
+		note_sighting(id, data.default_variant_id(), data.depth_min, false)
 		for v in data.variants:
-			note_sighting(id, (v as CreatureVariant).id, data.depth_min)
+			note_sighting(id, (v as CreatureVariant).id, data.depth_min, false)
 		add_observation(id, GameConfig.OBSERVATION_FULL)
 
 

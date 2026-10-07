@@ -27,7 +27,11 @@ var _shader: Shader = null
 var _chunk_root: Node2D = null
 ## Vector2i -> ChunkData
 var _cache: Dictionary = {}
-var _cache_order: Array[Vector2i] = []
+## Monotonic counter stamped onto ChunkData on access. Cheaper than keeping an
+## ordered list: `get_tile` is called thousands of times while meshing a single
+## chunk's border, and an O(n) list reorder on every one of those reads was the
+## dominant cost of bringing a chunk online.
+var _access_tick: int = 0
 ## Vector2i -> ChunkNode
 var _live: Dictionary = {}
 ## Vector2i -> { local_index: block_id }
@@ -53,7 +57,7 @@ func initialize(p_seed: int, mods: Dictionary = {}) -> void:
 	gen = WorldGen.new(p_seed)
 	_mods = mods.duplicate(true)
 	_cache.clear()
-	_cache_order.clear()
+	_access_tick = 0
 	for coord in _live.keys():
 		(_live[coord] as ChunkNode).release()
 	_live.clear()
@@ -314,9 +318,10 @@ func _recollect_static_lights() -> void:
 # --- Chunk data resolution ---------------------------------------------------
 
 func _resolve(coord: Vector2i) -> ChunkData:
+	_access_tick += 1
 	if _cache.has(coord):
 		var hit: ChunkData = _cache[coord]
-		_touch(coord)
+		hit.last_used = _access_tick
 		return hit
 	var data := ChunkData.new(coord)
 	gen.generate_chunk(coord.x, coord.y, data.tiles)
@@ -328,28 +333,29 @@ func _resolve(coord: Vector2i) -> ChunkData:
 				data.tiles[idx] = int(m[idx])
 	data.dirty = true
 	data.analysed = false
+	data.last_used = _access_tick
 	_cache[coord] = data
-	_cache_order.append(coord)
 	_evict_if_needed()
 	return data
 
 
-func _touch(coord: Vector2i) -> void:
-	var i := _cache_order.find(coord)
-	if i >= 0:
-		_cache_order.remove_at(i)
-	_cache_order.append(coord)
-
-
+## Eviction is rare (only when the cache overflows), so a linear scan for the
+## least recently used non-live chunk is cheaper overall than maintaining order
+## on every read.
 func _evict_if_needed() -> void:
-	while _cache_order.size() > CACHE_LIMIT:
-		var victim: Vector2i = _cache_order.pop_front()
-		if _live.has(victim):
-			# Never evict something currently on screen; re-queue it instead.
-			_cache_order.append(victim)
-			if _cache_order.size() <= CACHE_LIMIT:
-				return
-			continue
+	while _cache.size() > CACHE_LIMIT:
+		var victim: Vector2i = Vector2i(-99999, -99999)
+		var oldest := 0x7FFFFFFFFFFFFFF
+		for coord: Vector2i in _cache.keys():
+			if _live.has(coord):
+				continue
+			var stamp: int = (_cache[coord] as ChunkData).last_used
+			if stamp < oldest:
+				oldest = stamp
+				victim = coord
+		if victim.x == -99999:
+			# Everything cached is currently live; nothing may be dropped.
+			return
 		_cache.erase(victim)
 
 
