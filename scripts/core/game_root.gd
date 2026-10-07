@@ -201,7 +201,6 @@ func _show_opening() -> void:
 
 func _connect_signals() -> void:
 	base_camp.station_triggered.connect(_on_station)
-	EventBus.item_collected.connect(_on_item_collected)
 	EventBus.block_mined.connect(_on_block_mined)
 	EventBus.rare_event_started.connect(_on_rare_event)
 
@@ -257,10 +256,6 @@ func _on_station(station: String) -> void:
 			EventBus.toast_requested.emit(STORY_SLAB[_slab_index], "info")
 			_slab_index = (_slab_index + 1) % STORY_SLAB.size()
 			Game.note_story("read_surface_slab")
-
-
-func _on_item_collected(_item_id: String, _amount: int) -> void:
-	pass
 
 
 func _on_block_mined(_tile: Vector2i, block_id: int, by_player: bool) -> void:
